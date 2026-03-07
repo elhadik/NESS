@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NESS Document AI Parser</title>
+    <!-- Modern Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation (Mock) -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i data-lucide="layers"></i>
+                <span>NESS</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="active"><i data-lucide="file-text"></i> Invoice Parser</a>
+                <a href="#"><i data-lucide="pie-chart"></i> History</a>
+                <a href="#"><i data-lucide="settings"></i> Settings</a>
+            </nav>
+            <div class="user-profile">
+                <div class="avatar">U</div>
+                <span>Admin User</span>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-text">
+                    <h1>Document Processing</h1>
+                    <p>Upload an invoice to automatically extract entities and line items layout.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary"><i data-lucide="help-circle"></i> Help</button>
+                    <button class="btn btn-primary" id="btn-upload-new"><i data-lucide="plus"></i> New Upload</button>
+                </div>
+            </header>
+
+            <div class="content-body">
+                
+                <!-- Upload Section -->
+                <section class="upload-section" id="upload-panel">
+                    <div class="drop-zone" id="drop-zone">
+                        <div class="drop-zone-content">
+                            <i data-lucide="cloud-upload" class="upload-icon"></i>
+                            <h3>Drag & Drop your invoice here</h3>
+                            <p>or click to browse from your computer</p>
+                            <span class="file-hint">Supported formats: PDF, JPEG, PNG (Max 16MB)</span>
+                            <input type="file" id="file-input" accept=".pdf, .png, .jpg, .jpeg" hidden>
+                        </div>
+                    </div>
+
+                    <!-- Selected File Preview before upload -->
+                    <div class="file-preview-card hidden" id="file-preview">
+                        <div class="file-info">
+                            <i data-lucide="file" class="file-icon-small"></i>
+                            <span id="preview-filename">invoice.pdf</span>
+                            <span class="file-size" id="preview-filesize">2.4 MB</span>
+                        </div>
+                        <button class="btn-icon text-danger" id="btn-remove-file" title="Remove File">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+
+                    <div class="upload-actions hidden" id="upload-actions">
+                        <button class="btn btn-primary btn-large" id="btn-process-doc">
+                            <i data-lucide="zap"></i> Extract Document Data
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Loading / Processing Overlay -->
+                <section class="loading-overlay hidden" id="processing-overlay">
+                    <div class="spinner-container">
+                        <div class="scanner-box">
+                            <div class="scanner-line"></div>
+                        </div>
+                        <h3>Analyzing Document...</h3>
+                        <p class="animated-dots">Using Google Cloud Document AI<span>.</span><span>.</span><span>.</span></p>
+                    </div>
+                </section>
+
+                <!-- Results Display Section -->
+                <section class="results-section hidden" id="results-panel">
+                    <div class="results-header">
+                        <h2>Extraction Results</h2>
+                        <span class="badge badge-success">Confidence: High</span>
+                    </div>
+
+                    <div class="results-grid">
+                        <!-- Key Entities Column -->
+                        <div class="card entities-card">
+                            <div class="card-header">
+                                <h3><i data-lucide="tag"></i> Key Information</h3>
+                            </div>
+                            <div class="card-body" id="entities-container">
+                                <!-- Entities will be injected here via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Summary Column -->
+                        <div class="card summary-card">
+                            <div class="card-header">
+                                <h3><i data-lucide="file-check-2"></i> Document Summary</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-summary" id="text-summary-content">No summary available.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Line Items Table -->
+                    <div class="card table-card mt-6">
+                        <div class="card-header">
+                            <h3><i data-lucide="list"></i> Line Items</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="line-items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th class="text-right">Quantity</th>
+                                        <th class="text-right">Unit Price</th>
+                                        <th class="text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="raw-json-panel mt-6">
+                        <button class="btn btn-text" id="btn-toggle-json">
+                            <i data-lucide="code"></i> View Raw API Response
+                        </button>
+                        <pre class="json-viewer hidden" id="json-viewer-content"></pre>
+                    </div>
+
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/script.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
