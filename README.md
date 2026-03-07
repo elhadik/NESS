@@ -1,11 +1,15 @@
 # NESS Document AI Parser
 
+
+
 NESS is a modern Flask application that utilizes Google Cloud Document AI to parse invoices, extracting key entities and line items, and displaying them in a clean, user-friendly interface.
 
 ## Prerequisites
 
 - Python 3.8+
+- Python 3.8+
 - Google Cloud Credentials with Document AI access
+- [Google Cloud SDK (gcloud CLI)](https://cloud.google.com/sdk/docs/install) installed and initialized
 
 ## Local Development Setup
 
@@ -36,6 +40,7 @@ Follow these instructions to run the NESS application locally using the real Goo
    ```bash
    gcloud auth application-default login
    ```
+   *Note: If the `gcloud` command is not found, please install the Google Cloud SDK using the link in the Prerequisites section.*
 
 6. **Set up Google Cloud credentials and environment variables:**
    Create a `.env` file in the root of the `NESS` directory and add your GCP project and processor details:
