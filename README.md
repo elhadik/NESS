@@ -1,5 +1,7 @@
 # NESS Document AI Parser
 
+![NESS GUI Dashboard](static/screenshot.png)
+
 NESS is a modern Flask application that utilizes Google Cloud Document AI to parse invoices, extracting key entities and line items, and displaying them in a clean, user-friendly interface.
 
 ## Prerequisites
