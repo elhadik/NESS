@@ -1,0 +1,39 @@
+digraph NESS_Interaction {
+    rankdir=TB; // Top to Bottom for timeline feel
+    node [shape=rectangle, style=filled, fillcolor=lightblue, fontname="Arial"];
+    edge [fontname="Arial"];
+
+    // Lifelines (fake)
+    User [label="User", fillcolor=lightyellow];
+    Browser [label="Browser", fillcolor=lightyellow];
+    WebApp [label="Flask Web App\n(app.py)", fillcolor=lightgreen];
+    UploadsDir [label="Uploads Folder\n(uploads/)", shape=folder, fillcolor=lightgray];
+    DocAIParser [label="Document AI Parser\n(document_parser.py)", fillcolor=lightpink];
+    GeminiParser [label="Gemini Parser\n(gemini_parser.py)", fillcolor=lightpink];
+    DocAIService [label="Google Cloud\nDocument AI API", shape=ellipse, fillcolor=lightcyan]; // Fixed cloud shape
+    GeminiService [label="Google Cloud\nGemini API (Vertex UI)", shape=ellipse, fillcolor=lightcyan]; // Fixed cloud shape
+
+    // Interaction steps
+    User -> Browser [label="1. Upload Image"];
+    Browser -> WebApp [label="2. POST /upload\n(Image)"];
+    WebApp -> UploadsDir [label="3. Save Image"];
+    
+    // Phase 1: Parsing
+    WebApp -> DocAIParser [label="4. Parse Image\n(filepath)"];
+    DocAIParser -> DocAIService [label="5. Request Extract"];
+    DocAIService -> DocAIParser [label="6. Return JSON", style=dashed];
+    DocAIParser -> WebApp [label="7. Return JSON", style=dashed];
+    
+    // Phase 2: Validating (Sequential)
+    WebApp -> GeminiParser [label="8. Audit Results\n(filepath, DocAI JSON)"];
+    GeminiParser -> GeminiService [label="9. Request Verify"];
+    GeminiService -> GeminiParser [label="10. Return JSON", style=dashed];
+    GeminiParser -> WebApp [label="11. Return JSON", style=dashed];
+    
+    WebApp -> UploadsDir [label="12. Delete Image"];
+    WebApp -> Browser [label="13. Return Merged JSON", style=dashed];
+    Browser -> User [label="14. Render Results"];
+
+    // Align lifelines at the top
+    { rank=same; User Browser WebApp UploadsDir DocAIParser GeminiParser DocAIService GeminiService }
+}

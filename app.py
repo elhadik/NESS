@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from document_parser import parse_document  # We will create this
+from gemini_parser import analyze_receipt_with_gemini
 
 # Load environment variables from .env file
 load_dotenv()
@@ -35,13 +36,24 @@ def upload_file():
         try:
             # Call our document parser
             parsed_data = parse_document(filepath, file.mimetype)
+            
+            # Call Gemini
+            print(f"Calling Gemini for {filepath}...")
+            gemini_data = analyze_receipt_with_gemini(filepath, parsed_data, file.mimetype)
+            print(f"Gemini response: {gemini_data}")
+            
+            # Merge results
+            parsed_data['gemini_analysis'] = gemini_data
+            
             return jsonify(parsed_data)
         except Exception as e:
+            print(f"Error during upload/processing: {e}")
             return jsonify({'error': str(e)}), 500
         finally:
             # Clean up the file after parsing
             if os.path.exists(filepath):
                 os.remove(filepath)
+                print(f"Deleted {filepath}")
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

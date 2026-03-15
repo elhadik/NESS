@@ -113,6 +113,30 @@
                                 <p class="text-summary" id="text-summary-content">No summary available.</p>
                             </div>
                         </div>
+
+                        <!-- Gemini Verification Column -->
+                        <div class="card gemini-card">
+                            <div class="card-header">
+                                <h3><i data-lucide="shield-check"></i> Gemini Verification</h3>
+                                <span class="badge" id="gemini-confidence-badge">Score: -</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="gemini-score-display">
+                                    <span class="score-label">Confidence Score:</span>
+                                    <span class="score-value" id="gemini-score-value">-</span>/3
+                                </div>
+                                <div class="gemini-criteria mt-2">
+                                    <h4>Criteria Met:</h4>
+                                    <p id="gemini-criteria-content">N/A</p>
+                                </div>
+                                <div class="gemini-extracted mt-4">
+                                    <h4>Gemini Extracted Values:</h4>
+                                    <div class="entity-grid" id="gemini-extracted-container">
+                                        <!-- Will be injected via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Line Items Table -->

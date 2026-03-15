@@ -60,7 +60,19 @@ Follow these instructions to run the NESS application locally using the real Goo
 Once the server is running, open your web browser and go to:
 [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
+## Architecture
+
+The NESS application uses a two-step process to parse and verify receipts:
+
+1.  **Parsing**: Document AI extracts text and key fields from the receipt image.
+2.  **Validation**: Gemini 3.5 (Flash) audits the Document AI results against the original image to ensure accuracy and issue a confidence score.
+
+### Interaction Sequence
+
+![Interaction Sequence](ness_sequence_diagram.png)
+
 ## Features
+
 
 - **Modern GUI**: Includes a drag-and-drop file upload zone.
 - **Loading Overlay**: Simulates processing time with smooth scanning animations.

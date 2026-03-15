@@ -193,7 +193,65 @@ document.addEventListener('DOMContentLoaded', () => {
             tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No line items extracted.</td></tr>';
         }
 
-        // 4. Update JSON Modal Hook
+        // 4. Render Gemini Analysis
+        const geminiScoreValue = document.getElementById('gemini-score-value');
+        const geminiConfidenceBadge = document.getElementById('gemini-confidence-badge');
+        const geminiCriteriaContent = document.getElementById('gemini-criteria-content');
+        const geminiExtractedContainer = document.getElementById('gemini-extracted-container');
+
+        if (data.gemini_analysis) {
+            const gemini = data.gemini_analysis;
+            geminiScoreValue.textContent = gemini.confidence_score !== undefined ? gemini.confidence_score : '-';
+            geminiCriteriaContent.textContent = gemini.criteria_met || 'N/A';
+            
+            // Update badge class based on score
+            geminiConfidenceBadge.className = 'badge';
+            if (gemini.confidence_score >= 3) {
+                geminiConfidenceBadge.classList.add('badge-success');
+                geminiConfidenceBadge.textContent = 'Confidence: High (' + gemini.confidence_score + ')';
+            } else if (gemini.confidence_score >= 2) {
+                geminiConfidenceBadge.classList.add('badge-warning');
+                geminiConfidenceBadge.textContent = 'Confidence: Moderate (' + gemini.confidence_score + ')';
+            } else if (gemini.confidence_score > 0) {
+                geminiConfidenceBadge.classList.add('badge-danger');
+                geminiConfidenceBadge.textContent = 'Confidence: Low (' + gemini.confidence_score + ')';
+            }
+ else {
+                geminiConfidenceBadge.textContent = 'Score: -';
+            }
+
+            // Render extracted values using entity-grid
+            geminiExtractedContainer.innerHTML = '';
+            if (gemini.extracted_values) {
+                for (const [key, value] of Object.entries(gemini.extracted_values)) {
+                    if (value !== null && value !== undefined) {
+                        const item = document.createElement('div');
+                        item.className = 'entity-item';
+                        
+                        // Format label: "Merchant" -> "Merchant"
+                        const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        
+                        item.innerHTML = `
+                            <span class="entity-label">${label}</span>
+                            <span class="entity-value">${escapeHtml(value)}</span>
+                        `;
+                        geminiExtractedContainer.appendChild(item);
+                    }
+                }
+            }
+            if (geminiExtractedContainer.innerHTML === '') {
+                geminiExtractedContainer.innerHTML = '<p class="text-muted">No values extracted by Gemini.</p>';
+            }
+        } else {
+            // Reset Gemini UI if no data
+            geminiScoreValue.textContent = '-';
+            geminiConfidenceBadge.className = 'badge';
+            geminiConfidenceBadge.textContent = 'Score: -';
+            geminiCriteriaContent.textContent = 'N/A';
+            geminiExtractedContainer.innerHTML = '<p class="text-muted">N/A</p>';
+        }
+
+        // 5. Update JSON Modal Hook
         const jsonViewer = document.getElementById('json-viewer-content');
         jsonViewer.textContent = JSON.stringify(data, null, 2);
     }

@@ -1,0 +1,19 @@
+digraph NESS_Architecture {
+    rankdir=LR;
+    node [shape=rectangle, style=filled, fillcolor=lightblue];
+
+    Browser [label="User Browser", fillcolor=lightyellow];
+    WebApp [label="Flask Web App\n(app.py)", fillcolor=lightgreen];
+    DocAIParser [label="Document AI Parser\n(document_parser.py)", fillcolor=lightpink];
+    GeminiParser [label="Gemini Parser\n(gemini_parser.py)", fillcolor=lightpink];
+    UploadsDir [label="Uploads Folder\n(uploads/)", shape=folder, fillcolor=lightgray];
+    DocAIService [label="Google Cloud\nDocument AI API", shape=cloud, fillcolor=lightcyan];
+    GeminiService [label="Google Cloud\nGemini API (Vertex UI)", shape=cloud, fillcolor=lightcyan];
+
+    Browser -> WebApp [label="POST /upload\n(Image)"];
+    WebApp -> UploadsDir [label="Save/Delete"];
+    WebApp -> DocAIParser [label="Parse Image"];
+    WebApp -> GeminiParser [label="Audit Results"];
+    DocAIParser -> DocAIService [label="Extract Text"];
+    GeminiParser -> GeminiService [label="Verify & Score"];
+}

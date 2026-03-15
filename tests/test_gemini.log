@@ -1,0 +1,12 @@
+Python executable: /usr/local/google/home/elhadik/NESS/venv/bin/python3
+Environment variables:
+PROJECT_ID: elhadik-sandbox-2
+PROCESSOR_ID: 5e3c2fe087453c6e
+LOCATION: us
+GEMINI_API_KEY: Missing
+Initializing client with default credentials (likely Vertex AI)...
+Using Vertex AI with project=elhadik-sandbox-2, location=us-central1
+Sending simple prompt...
+Trying gemini-2.5-flash...
+Response received (gemini-2.5-flash):
+Hello! Yes, that's correct. I am a large language model, trained by Google.

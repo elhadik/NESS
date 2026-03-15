@@ -1,0 +1,27 @@
+Python executable: /usr/local/google/home/elhadik/NESS/venv/bin/python3
+Loaded image: /usr/local/google/home/elhadik/.gemini/jetski/brain/3948d905-f473-46e4-aadd-8180484a8c5b/sample_receipt_1773596167398.png (PNG, (640, 640))
+Initializing client with Vertex AI: project=elhadik-sandbox-2, location=us-central1
+Sending prompt and image to Gemini...
+Response received:
+{
+  "confidence_score": 5,
+  "criteria_met": "The receipt is perfectly legible with no blurring, glare, or cut-offs affecting key information. All key fields (Merchant, Date, Tax, Total, and individual items) are distinct and unambiguous, aligning with the criteria for an excellent score.",
+  "extracted_values": {
+    "Merchant": "GROCERY MART",
+    "Date": "10/26/23",
+    "Total": "47.08",
+    "Tax": "1.45"
+  }
+}
+
+Verification Successful: Valid JSON returned.
+{
+  "confidence_score": 5,
+  "criteria_met": "The receipt is perfectly legible with no blurring, glare, or cut-offs affecting key information. All key fields (Merchant, Date, Tax, Total, and individual items) are distinct and unambiguous, aligning with the criteria for an excellent score.",
+  "extracted_values": {
+    "Merchant": "GROCERY MART",
+    "Date": "10/26/23",
+    "Total": "47.08",
+    "Tax": "1.45"
+  }
+}
