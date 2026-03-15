@@ -8,7 +8,7 @@ load_dotenv()
 
 def analyze_receipt_with_gemini(file_path: str, document_ai_result: dict = None, mime_type: str = None) -> dict:
     """
-    Analyzes a receipt image and audits Document AI results using Gemini 3.5 (via Vertex AI).
+    Analyzes a receipt image and audits Document AI results using Gemini 3 (via Vertex AI).
     Returns a confidence score out of 3.
     """
     if not os.path.exists(file_path):
