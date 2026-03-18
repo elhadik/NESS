@@ -55,9 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function handleFileSelect(file) {
         // Basic validation
-        const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+        const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
         if (!validTypes.includes(file.type)) {
-            alert('Please upload a PDF or Image (JPEG/PNG) file.');
+            alert('Please upload a PDF or Image (JPEG/PNG/WEBP) file.');
             return;
         }
         
@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 4. Render Gemini Analysis
         const geminiScoreValue = document.getElementById('gemini-score-value');
         const geminiConfidenceBadge = document.getElementById('gemini-confidence-badge');
+        const topConfidenceBadge = document.getElementById('top-confidence-badge');
         const geminiCriteriaContent = document.getElementById('gemini-criteria-content');
         const geminiExtractedContainer = document.getElementById('gemini-extracted-container');
 
@@ -206,18 +207,22 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Update badge class based on score
             geminiConfidenceBadge.className = 'badge';
+            topConfidenceBadge.className = 'badge';
+            
             if (gemini.confidence_score >= 3) {
                 geminiConfidenceBadge.classList.add('badge-success');
-                geminiConfidenceBadge.textContent = 'Confidence: High (' + gemini.confidence_score + ')';
+                topConfidenceBadge.classList.add('badge-success');
+                geminiConfidenceBadge.textContent = topConfidenceBadge.textContent = 'Confidence: High (' + gemini.confidence_score + ')';
             } else if (gemini.confidence_score >= 2) {
                 geminiConfidenceBadge.classList.add('badge-warning');
-                geminiConfidenceBadge.textContent = 'Confidence: Moderate (' + gemini.confidence_score + ')';
+                topConfidenceBadge.classList.add('badge-warning');
+                geminiConfidenceBadge.textContent = topConfidenceBadge.textContent = 'Confidence: Moderate (' + gemini.confidence_score + ')';
             } else if (gemini.confidence_score > 0) {
                 geminiConfidenceBadge.classList.add('badge-danger');
-                geminiConfidenceBadge.textContent = 'Confidence: Low (' + gemini.confidence_score + ')';
-            }
- else {
-                geminiConfidenceBadge.textContent = 'Score: -';
+                topConfidenceBadge.classList.add('badge-danger');
+                geminiConfidenceBadge.textContent = topConfidenceBadge.textContent = 'Confidence: Low (' + gemini.confidence_score + ')';
+            } else {
+                geminiConfidenceBadge.textContent = topConfidenceBadge.textContent = 'Score: -';
             }
 
             // Render extracted values using entity-grid
@@ -251,7 +256,39 @@ document.addEventListener('DOMContentLoaded', () => {
             geminiExtractedContainer.innerHTML = '<p class="text-muted">N/A</p>';
         }
 
-        // 5. Update JSON Modal Hook
+        // 5. Render GCS Routing Outcome
+        const gcsBadge = document.getElementById('gcs-routing-badge');
+        const gcsText = document.getElementById('gcs-routing-text');
+        const gcsBucket = document.getElementById('gcs-routing-bucket');
+
+        if (data.gcs_routing) {
+            const routing = data.gcs_routing;
+            
+            if (routing.status === "Success") {
+                if (routing.score >= 3) {
+                    gcsBadge.className = 'badge badge-success';
+                    gcsBadge.textContent = 'Routed Successfully';
+                    gcsText.innerHTML = '<span style="color: var(--success-color);"><i data-lucide="check-circle"></i> High Quality - System Processed</span>';
+                } else {
+                    gcsBadge.className = 'badge badge-warning';
+                    gcsBadge.textContent = 'Manual Review Required';
+                    gcsText.innerHTML = '<span style="color: var(--warning-color);"><i data-lucide="alert-triangle"></i> Low Quality - Escalate to Review</span>';
+                }
+                gcsBucket.textContent = `Bucket: ${routing.bucket}`;
+            } else {
+                gcsBadge.className = 'badge badge-danger';
+                gcsBadge.textContent = 'Routing Failed';
+                gcsText.textContent = routing.status;
+                gcsBucket.textContent = '';
+            }
+        } else {
+            gcsBadge.className = 'badge';
+            gcsBadge.textContent = 'Status: N/A';
+            gcsText.textContent = 'N/A';
+            gcsBucket.textContent = '';
+        }
+
+        // 6. Update JSON Modal Hook
         const jsonViewer = document.getElementById('json-viewer-content');
         jsonViewer.textContent = JSON.stringify(data, null, 2);
     }

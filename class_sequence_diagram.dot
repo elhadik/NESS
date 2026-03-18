@@ -1,0 +1,45 @@
+digraph ClassSequence {
+    rankdir=TB;
+    nodesep=0.75;
+    ranksep=0.75;
+    pad=0.5;
+    splines=polyline;
+
+    // Global properties for a clean, modern look
+    node [shape=none, fontname="Helvetica, Arial, sans-serif"];
+    edge [fontname="Helvetica, Arial, sans-serif", fontsize=11, penwidth=1.5, color="#555555"];
+
+    // Modern HTML labels for Nodes
+    User [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#FFF9C4" COLOR="#FBC02D"><B>User</B> (Actor)</TD></TR></TABLE>>];
+    
+    Browser [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#E3F2FD" COLOR="#1976D2"><B>Browser</B></TD></TR><TR><TD BGCOLOR="#FFFFFF" COLOR="#1976D2">Object: NESS Web Interface</TD></TR></TABLE>>];
+    
+    FlaskApp [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#E8F5E9" COLOR="#388E3C"><B>Flask App</B> (app.py)</TD></TR><TR><TD BGCOLOR="#FFFFFF" COLOR="#388E3C">Object: Web Server</TD></TR></TABLE>>];
+    
+    DocParser [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#E0F7FA" COLOR="#0097A7"><B>Document AI Parser</B></TD></TR><TR><TD BGCOLOR="#FFFFFF" COLOR="#0097A7">Object: document_parser.py</TD></TR></TABLE>>];
+    
+    GemParser [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#FCE4EC" COLOR="#C2185B"><B>Gemini Parser</B></TD></TR><TR><TD BGCOLOR="#FFFFFF" COLOR="#C2185B">Object: gemini_parser.py</TD></TR></TABLE>>];
+    
+    GCS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#EDE7F6" COLOR="#512DA8"><B>Cloud Storage</B></TD></TR><TR><TD BGCOLOR="#FFFFFF" COLOR="#512DA8">Object: google.cloud.storage</TD></TR></TABLE>>];
+    
+    // Edges with descriptive colors and directions
+    User -> Browser [label=" 1. Upload Receipt Image", color="#1976D2", fontcolor="#1976D2"];
+    Browser -> FlaskApp [label=" 2. POST /upload (File)", color="#388E3C", fontcolor="#388E3C"];
+    
+    FlaskApp -> DocParser [label=" 3. parse_document(file)", color="#0097A7", fontcolor="#0097A7"];
+    DocParser -> FlaskApp [label=" 4. Return parsed OCR JSON", style=dashed, color="#0097A7", fontcolor="#0097A7"];
+    
+    FlaskApp -> GemParser [label=" 5. analyze_receipt_with_gemini()", color="#C2185B", fontcolor="#C2185B"];
+    GemParser -> FlaskApp [label=" 6. Return GEMINI JSON\n(Score 1-3)", style=dashed, color="#C2185B", fontcolor="#C2185B"];
+    
+    // Score Routing
+    FlaskApp -> GCS [label=" 7. [Score == 3] Upload blob\n-> 'ness_processed_docs'", color="#2E7D32", fontcolor="#2E7D32", penwidth=2.5];
+    FlaskApp -> GCS [label=" 8. [Score < 3] Escalate blob\n-> 'ness_human_review'", color="#D32F2F", fontcolor="#D32F2F", penwidth=2.5];
+    
+    GCS -> FlaskApp [label=" 9. Confirm GCS Upload", style=dashed, color="#512DA8", fontcolor="#512DA8"];
+    GCS -> FlaskApp [label=" 10. (Catch GCS Exception)\n-> Route Failed", style=dotted, color="#E64A19", fontcolor="#E64A19"];
+
+    // Return to UI
+    FlaskApp -> Browser [label=" 11. HTTP 200 Merged JSON", style=dashed, color="#388E3C", fontcolor="#388E3C"];
+    Browser -> User [label=" 12. Render Dashboard Results", style=dashed, color="#1976D2", fontcolor="#1976D2"];
+}

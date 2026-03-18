@@ -51,8 +51,8 @@
                             <i data-lucide="cloud-upload" class="upload-icon"></i>
                             <h3>Drag & Drop your invoice here</h3>
                             <p>or click to browse from your computer</p>
-                            <span class="file-hint">Supported formats: PDF, JPEG, PNG (Max 16MB)</span>
-                            <input type="file" id="file-input" accept=".pdf, .png, .jpg, .jpeg" hidden>
+                            <span class="file-hint">Supported formats: PDF, JPEG, PNG, WEBP (Max 16MB)</span>
+                            <input type="file" id="file-input" accept=".pdf, .png, .jpg, .jpeg, .webp" hidden>
                         </div>
                     </div>
 
@@ -90,7 +90,7 @@
                 <section class="results-section hidden" id="results-panel">
                     <div class="results-header">
                         <h2>Extraction Results</h2>
-                        <span class="badge badge-success">Confidence: High</span>
+                        <span class="badge" id="top-confidence-badge"></span>
                     </div>
 
                     <div class="results-grid">
@@ -135,6 +135,18 @@
                                         <!-- Will be injected via JS -->
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Routing Outcome Column -->
+                        <div class="card routing-card">
+                            <div class="card-header">
+                                <h3><i data-lucide="folder-output"></i> Routing Outcome</h3>
+                                <span class="badge" id="gcs-routing-badge">Status: -</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-summary" id="gcs-routing-text" style="margin-top: 1rem; font-weight: 500;">Document routing pending...</p>
+                                <p class="text-summary mt-2" id="gcs-routing-bucket" style="font-size: 0.85rem; color: #64748b;"></p>
                             </div>
                         </div>
                     </div>

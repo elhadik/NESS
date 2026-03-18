@@ -62,14 +62,15 @@ Once the server is running, open your web browser and go to:
 
 ## Architecture
 
-The NESS application uses a two-step process to parse and verify receipts:
+The NESS application uses a tightly-integrated three-step pipeline to automatically process and route receipts:
 
-1.  **Parsing**: Document AI extracts text and key fields from the receipt image.
-2.  **Validation**: Gemini 3 (Flash) audits the Document AI results against the original image to ensure accuracy and issue a confidence score.
+1.  **Parsing**: Google Cloud Document AI extracts all text, key entities, and structured line items from the uploaded receipt image.
+2.  **Validation**: A Gemini 1.5 Multimodal model acts as a "human auditor", comparing the extracted Document AI JSON directly against the original receipt image, and generating a confidence score (1-3) based on its accuracy.
+3.  **Routing**: The Flask backend dynamically routes the original image into designated Google Cloud Storage buckets depending on the validation score (`ness_processed_docs` for a perfect score of 3, or `ness_human_review` for a score < 3 to solicit manual auditing).
 
 ### Interaction Sequence
 
-![Interaction Sequence](ness_sequence_diagram.png)
+![NESS Interaction Sequence Diagram](class_sequence_diagram.png)
 
 ## Features
 

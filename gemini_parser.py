@@ -14,10 +14,16 @@ def analyze_receipt_with_gemini(file_path: str, document_ai_result: dict = None,
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Image not found at {file_path}")
 
-    try:
-        image = Image.open(file_path)
-    except Exception as e:
-        raise ValueError(f"Error loading image: {e}")
+    document_media = None
+    if mime_type == "application/pdf":
+        from google.genai import types
+        with open(file_path, "rb") as f:
+             document_media = types.Part.from_bytes(data=f.read(), mime_type="application/pdf")
+    else:
+        try:
+            document_media = Image.open(file_path)
+        except Exception as e:
+            raise ValueError(f"Error loading image: {e}")
 
     try:
         # Initialize client
@@ -63,7 +69,7 @@ def analyze_receipt_with_gemini(file_path: str, document_ai_result: dict = None,
 
         response = client.models.generate_content(
             model='gemini-2.5-flash',
-            contents=[prompt, image],
+            contents=[prompt, document_media],
             config=genai.types.GenerateContentConfig(
                 response_mime_type="application/json"
             )
